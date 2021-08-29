@@ -13,36 +13,69 @@ def select_all(conn):
 
 #Create a list containing all the values in the database
     rows = cur.fetchall()
-    print(rows)
 #print each row
     for row in rows:
         print(row)
- 
-print("Hi user! Ceate a todo list database...")
-
-num=input('Please enter how many things you have to do.')
-numz=int(num)
-i=int(1)
+    menu()
+    
+def add():
+    num=input('Please enter how many things you have to do.')
+    numz=int(num)
+    i=int(1)
 
 #creates the file for the list and a variable resmebling the file in the code
-conn = sqlite3.connect('todo.db') # Warning: This file is created in the current directory
+    conn = sqlite3.connect('todo.db') # Warning: This file is created in the current directory
 #Creates the table for the todo list in the file
-conn.execute("CREATE TABLE IF NOT EXISTS todo (category char(50), theitem char(100),id INTEGER PRIMARY KEY )")
+    conn.execute("CREATE TABLE IF NOT EXISTS todo (id INTEGER PRIMARY KEY ,category char(50), theitem char(100))")
 #insert users inputs into table
-while i<=numz:
-    category=input('Please enter what category of what you want to do')
-    item=input('pleses enter the item you want to buy or the activite you want to do')
-    conn.execute("INSERT INTO todo (category, theitem) VALUES ('{}','{}')".format(category,item))
-    i=i+1
-conn.commit()
-
-
-print("Database todo.db created")
-select_all(conn)
-
-
-ans=int(input('want to delete? if yes enter 1 if no enter 0'))
-if ans==1:
-    conn = sqlite3.connect('todo.db')
-    conn.execute("DELETE FROM todo")
+    while i<=numz:
+        category=input('Please enter what category of what you want to do')
+        item=input('pleses enter the item you want to buy or the activite you want to do')
+        conn.execute("INSERT INTO todo (category, theitem) VALUES ('{}','{}')".format(category,item))
+        i=i+1
     conn.commit()
+    menu()
+
+def dele():
+        conn = sqlite3.connect('todo.db')
+        conn.execute("DELETE FROM todo")
+        conn.commit()
+        print('All values have been deleted')
+        menu()
+        
+#menu function based on function from teachyourselfpython.com
+def menu():
+    print("Choose what you want to do to the list")
+    print()
+    
+    #creates the file for the list and a variable resmebling the file in the code
+    conn = sqlite3.connect('todo.db') # Warning: This file is created in the current directory
+    choice = input("""
+                      A: Add assignments to the todo list
+                      B: deltete all values in the table
+                      C: print the DB
+                    
+
+                      Please enter your choice: """)
+
+    if choice == "A" or choice =="a":
+        add()
+    elif choice == "B" or choice =="b":
+        dele()
+    elif choice == "C" or choice =="c":
+        select_all(conn)
+    #elif choice=="Q" or choice=="q":
+     #   sys.exit
+    else:
+        print("You must only select either A or B")
+        print("Please try again")
+        menu()
+        
+def main():
+    print('Hello welcome to todo list DB program')
+    menu()
+
+#the program is initiated, so to speak, here
+main()
+
+
